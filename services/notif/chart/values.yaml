@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/valaack/notif
-  tag: "3b4e184"
+  tag: "tagfail999"
   pullPolicy: IfNotPresent
 
 replicaCount: 2
