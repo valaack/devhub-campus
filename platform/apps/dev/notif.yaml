@@ -19,7 +19,7 @@ spec:
     namespace: devhub-dev
   syncPolicy:
     automated:
-      prune: false
+      prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
