@@ -1,0 +1,78 @@
+# ApplicationSet : annuaire — previews par branche.
+#
+# C'est l'étape 7. Lisez la doc avant : les generators sont nombreux et
+# leur subtilités piègent.
+#   Doc : https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/
+#
+# Deux options possibles :
+#   - `git` generator (sur branches) — le plus simple, polling 3 min.
+#   - `pullRequest` generator (sur PRs ouvertes) — requiert un token GitHub.
+#
+# Choisissez et justifiez dans RAPPORT.md.
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: annuaire-preview
+  namespace: argocd
+spec:
+  # TODO étape 7 (défi) : ajoutez `goTemplate: true` si vous voulez utiliser
+  # la syntaxe Go-template (plus puissante mais nouvelle).
+  generators:
+    # TODO : choisissez UN seul generator (commentez l'autre).
+    #
+    # Option A — git generator sur les branches feature/* :
+    # - git:
+    #     repoURL: https://github.com/<votre-handle>/devhub-campus.git
+    #     revision: HEAD
+    #     directories:
+    #       - path: services/annuaire/chart
+    #     # ou la version "branches" :
+    #     # branches:
+    #     #   - feature/*
+    #
+    # Option B — pullRequest generator :
+    # - pullRequest:
+    #     github:
+    #       owner: <votre-handle>
+    #       repo: devhub-campus
+    #       tokenRef:
+    #         secretName: github-token
+    #         key: token
+    #     requeueAfterSeconds: 60
+    []
+
+  template:
+    metadata:
+      # TODO : le nom doit être unique par génération.
+      # Variables disponibles selon le generator choisi :
+      #   - pullRequest generator : {{branch}}, {{branch_slug}}, {{number}}, {{head_short_sha}}
+      #   - git generator (branches) : {{branch}}, {{branchNormalized}}
+      # Le squelette ci-dessous est calibré pour pullRequest generator.
+      # Si vous choisissez git, remplacez {{branch_slug}} par {{branchNormalized}}.
+      name: annuaire-preview-{{branch_slug}}
+      labels:
+        devhub.io/env: preview
+        devhub.io/service: annuaire
+    spec:
+      project: devhub
+      source:
+        repoURL: https://github.com/<votre-handle>/devhub-campus.git
+        targetRevision: '{{branch}}'
+        path: services/annuaire/chart
+        helm:
+          valueFiles:
+            - values-preview.yaml
+          # TODO : surchargez ingress.host pour que chaque preview ait son hôte
+          # propre. Indice : `parameters` permet de surcharger une value à la volée.
+          parameters: []
+      destination:
+        server: https://kubernetes.default.svc
+        # TODO : le namespace doit être unique par preview.
+        namespace: devhub-preview-{{branch_slug}}
+      syncPolicy:
+        automated:
+          prune: true       # IMPORTANT : indispensable pour nettoyer les previews
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

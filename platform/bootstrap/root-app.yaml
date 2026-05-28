@@ -1,0 +1,45 @@
+# Root Application (pattern App of Apps).
+#
+# C'est la SEULE Application que vous créez à la main avec `kubectl apply`.
+# Tout le reste sera créé par elle, à partir des fichiers de `platform/apps/dev/`.
+#
+# Référence : https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/
+#
+# Étape 6 — à compléter.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+  # le finalizer assure que `kubectl delete app root` propage la suppression
+  # à toutes les Apps enfants (utile pour reset).
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: devhub
+
+  source:
+    # TODO : remplacez par l'URL HTTPS de votre fork de ce repo.
+    repoURL: https://github.com/<votre-handle>/devhub-campus.git
+    targetRevision: main
+    # TODO : indiquez ici le chemin où ArgoCD va chercher les manifestes
+    # YAML à appliquer. Réfléchissez à ce qui doit (et ne doit pas) être
+    # dans ce dossier.
+    path: platform/apps/dev
+    directory:
+      recurse: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  # TODO : configurez la sync policy.
+  # Question à vous poser : pour la root, voulez-vous selfHeal:true ?
+  # Et prune:true ? Justifiez vos choix dans RAPPORT.md.
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

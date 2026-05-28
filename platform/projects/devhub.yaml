@@ -1,0 +1,46 @@
+# AppProject ArgoCD : `devhub`
+#
+# Un AppProject est votre brique de sécurité. Sans lui, n'importe quelle
+# Application peut pointer vers n'importe quel repo et déployer dans
+# n'importe quel namespace. C'est dangereux dans une plateforme partagée.
+#
+# Référence : https://argo-cd.readthedocs.io/en/stable/operator-manual/project-management/
+#
+# Étape 6 — à compléter.
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: devhub
+  namespace: argocd
+spec:
+  description: Plateforme DevHub Campus
+
+  # TODO : listez ici les dépôts Git autorisés pour ce projet.
+  # Refusez tout dépôt qui n'est pas listé.
+  sourceRepos:
+    # - https://github.com/<votre-handle>/devhub-campus.git
+    # - …
+
+  # TODO : listez ici les destinations autorisées (clusters + namespaces).
+  # Pour le TP, vous voulez :
+  #   - le cluster local (server: https://kubernetes.default.svc)
+  #   - les namespaces commençant par devhub-* (devhub-dev, devhub-preview-*)
+  destinations:
+    # - server: https://kubernetes.default.svc
+    #   namespace: devhub-*
+
+  # TODO : restreignez les ressources cluster-scoped que ce projet peut créer.
+  # En l'état, vide = rien d'autorisé. C'est sûr mais ça bloque la création
+  # de namespaces. Réfléchissez à ce qu'il faut whitelister minimum.
+  clusterResourceWhitelist: []
+
+  # Ressources namespace-scoped autorisées. Par défaut * = tout. C'est OK
+  # pour le TP, mais en prod vous restreindriez.
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  # TODO étape 6 (défi bonus) : ajoutez ici une `roles` (rôle developer)
+  # et une `syncWindows` (fenêtre d'interdiction de sync 18h-8h).
+  # Voir : https://argo-cd.readthedocs.io/en/stable/operator-manual/project-management/

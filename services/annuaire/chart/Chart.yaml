@@ -1,0 +1,10 @@
+apiVersion: v2
+name: annuaire
+description: Chart Helm du service annuaire — DevHub Campus
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+# TODO : déclarez vous comme maintainer.
+# maintainers:
+#   - name: Prénom Nom
+#     email: prenom.nom@example.com

@@ -1,0 +1,12 @@
+# Surcharges pour l'environnement de développement (namespace devhub-dev).
+# Ne mettez ICI que ce qui diffère de values.yaml.
+
+ingress:
+  enabled: true
+  host: annuaire.devhub.local
+
+env:
+  LOG_LEVEL: debug
+
+# TODO : si vous voulez une seule réplique en dev pour économiser des ressources,
+# surchargez replicaCount ici.

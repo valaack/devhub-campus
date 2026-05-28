@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "annuaire.fullname" . }}
+  labels:
+    {{- include "annuaire.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "annuaire.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "annuaire.labels" . | nindent 8 }}
+    spec:
+      # TODO : appliquez le securityContext défini dans values.yaml.
+      # Indice : il y a un securityContext au niveau Pod ET au niveau container.
+      # Lequel met quoi ?
+      containers:
+        - name: annuaire
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+              name: http
+          env:
+            - name: PORT
+              value: "{{ .Values.service.targetPort }}"
+            - name: LOG_LEVEL
+              value: "{{ .Values.env.LOG_LEVEL }}"
+          # TODO : ajoutez la readinessProbe en s'appuyant sur .Values.probes.readiness.
+          # TODO : ajoutez la livenessProbe en s'appuyant sur .Values.probes.liveness.
+          # TODO : appliquez les resources de .Values.resources.
+          # TODO : appliquez le securityContext container-level.
