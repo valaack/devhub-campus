@@ -4,7 +4,6 @@ description: Chart Helm du service notif — DevHub Campus
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
-# TODO : déclarez vous comme maintainer.
-# maintainers:
-#   - name: Prénom Nom
-#     email: prenom.nom@example.com
+maintainers:
+  - name: Valentin
+    email: ton-email@example.com

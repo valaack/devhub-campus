@@ -7,9 +7,13 @@
 {{- end -}}
 
 {{- define "notif.labels" -}}
-{{/* TODO : 4 labels obligatoires. */}}
+app.kubernetes.io/name: {{ include "notif.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/part-of: devhub-campus
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "notif.selectorLabels" -}}
-{{/* TODO. */}}
+app.kubernetes.io/name: {{ include "notif.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
