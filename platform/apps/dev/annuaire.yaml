@@ -15,7 +15,7 @@ spec:
 
   source:
     # TODO : URL de votre fork.
-    repoURL: https://github.com/<votre-handle>/devhub-campus.git
+    repoURL: https://github.com/valaack/devhub-campus.git
     targetRevision: main
     # TODO : chemin vers le chart Helm du service.
     path: services/annuaire/chart
