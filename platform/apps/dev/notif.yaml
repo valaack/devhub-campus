@@ -1,7 +1,3 @@
-# Application ArgoCD : notif-dev
-#
-# Variante de annuaire.yaml pour le service notif.
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -11,20 +7,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: devhub
-
   source:
-    # TODO : URL de votre fork.
-    repoURL: https://github.com/<votre-handle>/devhub-campus.git
+    repoURL: https://github.com/valaack/devhub-campus.git
     targetRevision: main
     path: services/notif/chart
     helm:
       valueFiles:
         - values-dev.yaml
-
   destination:
     server: https://kubernetes.default.svc
     namespace: devhub-dev
-
   syncPolicy:
     automated:
       prune: false
