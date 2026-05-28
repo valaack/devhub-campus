@@ -20,3 +20,4 @@ LOG_LEVEL=debug go run ./cmd
 |---|---|---|
 | `PORT` | `8080` | port HTTP |
 | `LOG_LEVEL` | `info` | `debug`, `info`, `warn` |
+# preview test
